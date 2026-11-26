@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import tn.esprit.autoloc.domain.Reservation;
 import tn.esprit.autoloc.web.dto.ReservationRequestDTO;
 import tn.esprit.autoloc.web.dto.ReservationResponseDTO;
+import tn.esprit.autoloc.web.dto.ReservationWithContratRequestDTO;
 
 @Component
 public class ReservationMapper {
@@ -12,6 +13,10 @@ public class ReservationMapper {
         Reservation reservation = new Reservation();
         updateEntity(reservation, dto);
         return reservation;
+    }
+
+    public Reservation toEntity(ReservationWithContratRequestDTO dto) {
+        return toEntity(new ReservationRequestDTO(dto.dateDebut(), dto.dateFin(), dto.statut()));
     }
 
     public void updateEntity(Reservation reservation, ReservationRequestDTO dto) {

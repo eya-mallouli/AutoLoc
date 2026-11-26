@@ -15,12 +15,12 @@ public class EquipementMapper {
     }
 
     public void updateEntity(Equipement equipement, EquipementRequestDTO dto) {
-        equipement.setLibelle(dto.libelle());
+        equipement.setNom(dto.libelle());
     }
 
     public EquipementResponseDTO toResponse(Equipement equipement) {
         return new EquipementResponseDTO(
                 equipement.getIdEquipement(),
-                equipement.getLibelle());
+                equipement.getNom());
     }
 }

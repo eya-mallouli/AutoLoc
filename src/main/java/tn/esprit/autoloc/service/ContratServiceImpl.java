@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tn.esprit.autoloc.domain.Contrat;
+import tn.esprit.autoloc.domain.Reservation;
 import tn.esprit.autoloc.exception.ResourceNotFoundException;
 import tn.esprit.autoloc.repository.IContratRepository;
+import tn.esprit.autoloc.repository.IReservationRepository;
 import tn.esprit.autoloc.web.dto.ContratRequestDTO;
 import tn.esprit.autoloc.web.dto.ContratResponseDTO;
 import tn.esprit.autoloc.web.mapper.ContratMapper;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -18,6 +21,7 @@ import java.util.List;
 public class ContratServiceImpl implements IContratService {
 
     private final IContratRepository repository;
+    private final IReservationRepository reservationRepository;
     private final ContratMapper mapper;
 
     @Override
@@ -47,6 +51,19 @@ public class ContratServiceImpl implements IContratService {
     @Override
     public void delete(Long id) {
         repository.delete(getOrThrow(id));
+    }
+
+    @Override
+    public ContratResponseDTO affecterContratAReservation(LocalDate dateSignature, LocalDate dateDebut, LocalDate dateFin) {
+        Contrat contrat = repository.findByDateSignature(dateSignature)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Contrat introuvable avec la date de signature " + dateSignature));
+        Reservation reservation = reservationRepository.findByDateDebutAndDateFin(dateDebut, dateFin)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Reservation introuvable entre " + dateDebut + " et " + dateFin));
+        contrat.setReservation(reservation);
+        reservation.setContrat(contrat);
+        return mapper.toResponse(repository.save(contrat));
     }
 
     private Contrat getOrThrow(Long id) {

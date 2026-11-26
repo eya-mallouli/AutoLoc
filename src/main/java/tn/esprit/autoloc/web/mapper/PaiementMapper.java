@@ -16,7 +16,7 @@ public class PaiementMapper {
 
     public void updateEntity(Paiement paiement, PaiementRequestDTO dto) {
         paiement.setMontant(dto.montant());
-        paiement.setDatePaiement(dto.datePaiement());
+        paiement.setDatePaiement(dto.datePaiement() != null ? dto.datePaiement().toLocalDate() : null);
         paiement.setModePaiement(dto.modePaiement());
     }
 
@@ -24,7 +24,7 @@ public class PaiementMapper {
         return new PaiementResponseDTO(
                 paiement.getIdPaiement(),
                 paiement.getMontant(),
-                paiement.getDatePaiement(),
+                paiement.getDatePaiement() != null ? paiement.getDatePaiement().atStartOfDay() : null,
                 paiement.getModePaiement());
     }
 }

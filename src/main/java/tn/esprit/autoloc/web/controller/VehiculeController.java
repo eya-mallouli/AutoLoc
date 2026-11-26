@@ -43,4 +43,18 @@ public class VehiculeController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{idVehicule}/equipements/{idEquipement}")
+    public VehiculeResponseDTO affecterVehiculeAEquipement(
+            @PathVariable Long idVehicule,
+            @PathVariable Long idEquipement) {
+        return service.affecterVehiculeAEquipement(idVehicule, idEquipement);
+    }
+
+    @PutMapping("/affecter-maintenance")
+    public VehiculeResponseDTO affecterMaintenanceAvehicule(
+            @RequestParam String description,
+            @RequestParam String immatriculation) {
+        return service.affecterMaintenanceAvehicule(description, immatriculation);
+    }
 }
